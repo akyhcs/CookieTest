@@ -1,0 +1,43 @@
+node {
+ try  {
+ notify('Job Started') 
+
+	  stage('Git-Checkout') {
+   git branch:'qa_server', url:''
+  }
+	   stage('Input for deploy in test server') {  
+   input('Do you want to deploy in test server proceed?')      
+        }
+ def project_path="devops/"
+ 
+ dir(project_path) {
+       stage('Maven-Package') {
+   sh label: '', script: 'mvn package'
+  }
+
+ 
+   stage('Docker-Stage-Deployment') {
+   sh label: 'DOCKER DEPLOYMENT', script: 'docker-compose up -d --build'
+  }
+	 
+	stage('Stage Deploy approval'){
+    input "Deploy to stage?"
+    build 'production_server'
+} 
+
+ }
+notify('Job Completed')   
+} catch (err) {
+  notify("Error ${err}")
+  currentBuild.result = 'FAILURE'
+}
+}
+
+def notify(status){
+    emailext (
+	to: "chakradhar1998@outlook.com",
+	subject: "${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+	 body: """<p>${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+	<p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>""",
+		)
+	}
