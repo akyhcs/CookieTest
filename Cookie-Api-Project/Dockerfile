@@ -1,12 +1,17 @@
 # Base Image
 FROM openjdk:8
-FROM tomcat:9.0
+
+# Maintainer
+MAINTAINER DEVARAKONDA CHAKRADHAR
+
+# Create DIR
+RUN mkdir -p /usr/src/myapp
 
 # COPY APPLICTAION COde
-COPY target/CookieProblem-0.0.1-SNAPSHOT.jar    /usr/local/tomcat/webapps/ROOT.war
+COPY target/CookieProblem-0.0.1-SNAPSHOT.jar    /usr/src/myapp
 
 # Setup Working DIR
-WORKDIR /usr/local/tomcat/webapps/
+WORKDIR /usr/src/myapp
 
 #EXPOSE
 EXPOSE 8080
