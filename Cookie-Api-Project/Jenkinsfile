@@ -3,7 +3,7 @@ node {
  notify('Job Started') 
 
 	  stage('Git-Checkout') {
-   git branch:'master', url:'https://github.com/chakri1998/CookieTest.git'
+   git branch:'master', url:'https://github.com/akyhcs/CookieTest.git'
   }
 	   stage('Input for deploy in test server') {  
    input('Do you want to deploy in test server proceed?')      
